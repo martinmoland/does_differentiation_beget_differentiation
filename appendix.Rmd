@@ -1,0 +1,261 @@
+---
+title: "APPENDIX: 'Does differentiation beget differentiation?'"
+author:
+- name: Martin Moland
+  affiliation: ARENA, Centre for European Studies
+geometry: margin=1in
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+fontsize: 11pt
+output: pdf_document
+keywords: ""
+endnotes: FALSE
+# csl: inst/jpr.csl
+mainfont: cochineal
+# sansfont: Linux Biolinum O
+sansitup: FALSE
+params:
+  anonymous: ""
+  doublespacing: ""
+  removetitleabstract: ""
+appendix: TRUE
+appendixletter: "A"
+pandocparas: FALSE
+anonymous: "`r params$anonymous`"
+doublespacing: "`r params$doublespacing`"
+removetitleabstract: "`r params$removetitleabstract`"
+linkcolor: black
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{csquotes}
+  - \LTcapwidth=.95\textwidth
+  - \linespread{1.05}
+  - \usepackage{hyperref}
+  - \usepackage{setspace}
+  - \renewcommand{\thepage}{A-\arabic{page}}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \newcolumntype{d}{S[input-symbols = ()]}
+---
+
+```{r setup, include=FALSE}
+is_docx <- knitr::pandoc_to("docx")
+is_latex <- knitr::pandoc_to("latex")
+
+table_format <- ifelse(is_docx, "huxtable", 'default')
+
+# I don't know how Texas Instruments smart this is, but p-sure default DPI is 96.
+# That's not a problem for LaTeX, but it looks not-so-great for Word.
+# For Word, let's up that to 600. This should allow for cross-referencing 
+# in {bookdown} while allowing for conditional DPI
+
+if (is_latex) {
+  conditional_dpi <- 96
+  return(conditional_dpi)
+} else {
+  conditional_dpi <- 600
+  return(conditional_dpi)
+} 
+
+knitr::opts_chunk$set(echo = FALSE,
+                      message=FALSE, warning=FALSE,
+                      fig.path='doc/figs/',
+                      cache.path = 'doc/_cache/',
+                      fig.width = 8.5, dpi = conditional_dpi,
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      x2 = paste0(stringr::str_extract(x2, '.*/'), 
+                                  "appendix-", 
+                                  stringr::str_remove(x2, ".*/"))
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+options(knitr.kable.NA = '')
+```
+
+\setcounter{table}{0}
+\renewcommand*{\thetable}{A\arabic{table}}
+```{r, results='asis'}
+appendix_items <- readRDS("data/appendix_items.Rds")
+EUI_final_DI_disc <- readRDS("data/EUI_final_DI_disc.Rds")
+
+library(psychTools)
+cat(fa2latex(appendix_items$`Factor analysis of economy`, heading = "Factor analysis of perception of economy", silent = TRUE, caption = "Factor analysis of perceptions of the economy."))
+```
+
+\setcounter{figure}{0}
+\renewcommand*{\thefigure}{A\arabic{figure}}
+```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged)", fig.height=8.5}
+library(sensemakr)
+appendix_items$"Fixed effect of non-interacted model" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
+                          eurosceptic + gender + excl_identity + factor(country), weights = EUI_final_DI_disc$weight, 
+                        data = EUI_final_DI_disc)
+#Run sensemakr
+appendix_items$"Sensitivity test of non-interacted model" <- sensemakr::sensemakr(appendix_items$`Fixed effect of non-interacted model`, 
+                                treatment = "article_disc_log")
+plot(appendix_items$"Sensitivity test of non-interacted model", type = "extreme")
+```
+
+```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism", fig.height=8.5}
+appendix_items$"Fixed effect of interacted model" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
+                        eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = EUI_final_DI_disc$weight, 
+                      data = EUI_final_DI_disc)
+appendix_items$"Sensitivity test of interacted model" <- sensemakr(appendix_items$`Fixed effect of interacted model`, 
+                                  treatment = "article_disc_log:eurosceptic1")
+plot(appendix_items$`Sensitivity test of interacted model`, type = "extreme")
+```
+
+```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism in Scandinavia", fig.height=8.5}
+nordic_data <- readRDS("data/nordic_data.Rds")
+CEE_data <- readRDS("data/CEE_data.Rds")
+appendix_items$"Fixed effect of interacted model (Nordics)" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
+                                                          eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = nordic_data$weight, 
+                                                        data = nordic_data)
+appendix_items$"Sensitivity test of interacted model (Nordics)" <- sensemakr(appendix_items$`Fixed effect of interacted model (Nordics)`, 
+                                                                   treatment = "article_disc_log:eurosceptic1")
+plot(appendix_items$`Sensitivity test of interacted model (Nordics)`, type = "extreme")
+```
+
+```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism in Central and Eastern Europe", fig.height=8.5}
+library(sensemakr)
+appendix_items$"Fixed effect of interacted model (CEE)" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
+                                                                    eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = CEE_data$weight, 
+                                                                  data = CEE_data)
+appendix_items$"Sensitivity test of interacted model (CEE)" <- sensemakr(appendix_items$`Fixed effect of interacted model (CEE)`, 
+                                                                             treatment = "article_disc_log:eurosceptic1")
+plot(appendix_items$`Sensitivity test of interacted model (CEE)`, type = "extreme")
+```
+
+```{r, results='asis'}
+library(mice)
+library(miceadds)
+library(merTools)
+main_impute <- readRDS("data/main_impute.Rds")
+
+coef_map_regions2 <- c('(Intercept)' = 'Constant',
+                          'article_disc_log:nordic_dummy' = 'Article-years (logged) X Scandinavia',
+                      'article_disc_log:CEE_dummy' = 'Article-years (logged) X CEE',
+                      "article_disc_log:eurosceptic1" = "Article-years (logged) X Eurosceptic",
+                          'article_disc_log' = 'Article-years (logged)',
+                          'market_europe' = 'Liberal economic values',
+                          'alternative econ' = 'Perception of economy',
+                          'gov_trust' = 'Support national government',
+                          'left_right' = 'Left-right',
+                          'left_right_sqr' = 'Left-right (sqr)',
+                          'eurosceptic1' = 'Eurosceptic',
+                          'gender' = 'Gender',
+                          'excl_identity' = 'Exclusively national identity', 
+                      "nordic_dummy" = "Scandinavia",
+                      "CEE_dummy" = "Central and Eastern Europe")
+
+modelsummary::modelsummary(main_impute, fmt = 3, output = "latex", coef_map = coef_map_regions2, 
+             stars = TRUE, title = "Imputed model of interaction between Euroscepticism and article-years (logged) and model with regional dummies")
+```
+
+```{r, results='asis'}
+regional_impute <- readRDS("data/regional_impute.Rds")
+coef_map_eurosceptic2 <- c('(Intercept)' = 'Constant',
+                          'article_disc_log:eurosceptic1' = 'Article-years (logged) X Euroscepticism',
+                          'article_disc_log' = 'Article-years (logged)',
+                          'market_europe' = 'Liberal economic values',
+                          'alternative econ' = 'Perception of economy',
+                          'gov_trust' = 'Support national government',
+                          'left_right' = 'Left-right',
+                          'left_right_sqr' = 'Left-right (sqr)',
+                          'eurosceptic1' = 'Eurosceptic',
+                          'gender' = 'Gender',
+                          'excl_identity' = 'Exclusively national identity')
+modelsummary::modelsummary(regional_impute, fmt = 3, output = "latex", coef_map = coef_map_eurosceptic2, 
+             stars = TRUE, title = "Imputed models showing interactions of Euroscepticism and article-years (logged) by region")
+
+coef_map_alteurosceptic <- c('(Intercept)' = 'Constant',
+                          'article_disc_logeu_democ_satisf' = 'Article-years (logged) X Euroscepticism',
+                          'article_disc_log' = 'Article-years (logged)',
+                          'market_europe' = 'Liberal economic values',
+                          'alternative econ' = 'Perception of economy',
+                          'gov_trust' = 'Support national government',
+                          'left_right' = 'Left-right',
+                          'left_right_sqr' = 'Left-right (sqr)',
+                          'eu_democ_satisf' = 'Eurosceptic',
+                          'gender' = 'Gender',
+                          'excl_identity' = 'Exclusively national identity')
+
+modelsummary::modelsummary(appendix_items$`Alternative conceptualization of Euroscepticism`, fmt = 3, output = "latex", coef_map = coef_map_alteurosceptic, 
+             stars = TRUE, title = "Model showing alternative conceptualization of Euroscepticism")
+```
+
+```{r, fig.cap="Predicted values of support for constitutional differentiated integration as a function of an interaction between exposure to differentiated integration and satisfaction with EU democracy. Slopes for minimum, median and maximum values of satisfaction with EU democracy are shown. 95% CIs", fig.height=8.5}
+library(sjPlot)
+library(ggplot2)
+pred_plot_interact_main <- plot_model(appendix_items$`Alternative conceptualization of Euroscepticism`, type = "pred", terms = c("article_disc_log", "eu_democ_satisf"), 
+                                      colors = "bw", legend.title = "EU democracy satisfaction")
+pred_plot_interact_main_final <-  pred_plot_interact_main + ggtitle("Support for constitutional differentiation", 
+                                                                    subtitle = "Interaction between EU democracy satisfaction and differentiation") + labs(x = "Differentiation (article-years (logged))",
+                                                                                                                                                           y = "Predicted value") + scale_linetype_manual(name = "EU democracy satisfaction",
+                           values = c("dashed", "solid", "dotted"),
+                           labels = c("Minimum", "Median", "Max")) + font_size(title = 15, labels.x = 15, labels.y = 15)
+pred_plot_interact_main_final
+```
+
+```{r, fig.cap="Number of differentiations from EU primary law 1952-2020 (log-transformed and recency-weighted article-years) by EU member state.", fig.height=8.5}
+bar_chart_articleyear <- ggplot(EUI_final_DI_disc, aes(x = factor(country), y = article_disc_log)) +
+  geom_col(stat = "identity", position = "dodge")
+bar_chart_articleyear + labs(x = "Country", y = "Discounted article-years (log-transformed)") +
+  scale_x_discrete(breaks = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14),
+                   labels = c("UK", "DK", "FI", "FR", "DE", "SE", "GR", "HU", "IT",
+                              "LT", "NL", "PL", "RO", "ES")) +
+  ggtitle(label = "Differentiated integration in the EU", 
+          subtitle = "Primary law differentiations (article-years log-transformed and weighted)") + font_size(title = 15, labels.x = 15, labels.y = 15)
+```
+
+```{r, results='asis'}
+southern_mod = list()
+southern_mod$"Southern Europe" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
+                           eurosceptic + gender + excl_identity + south_dummy + south_dummy*article_disc_log + (1|country), weights = EUI_final_DI_disc$weight, 
+                         data = EUI_final_DI_disc)
+coef_map_southern <- c('(Intercept)' = 'Constant',
+                          'article_disc_logsouthern_dummy1' = 'Article-years (logged) X Southern Europe',
+                          'article_disc_log' = 'Article-years (logged)',
+                          'market_europe' = 'Liberal economic values',
+                          'alternative econ' = 'Perception of economy',
+                          'gov_trust' = 'Support national government',
+                          'left_right' = 'Left-right',
+                          'left_right_sqr' = 'Left-right (sqr)',
+                          'eurosceptic1' = 'Eurosceptic',
+                          'gender' = 'Gender',
+                          'excl_identity' = 'Exclusively national identity', 
+                      "south_dummy1" = "Southern Europe")
+
+modelsummary::modelsummary(southern_mod, fmt = 3, output = "latex", coef_map = coef_map_alteurosceptic, 
+             stars = TRUE, title = "Model showing effect of exposure in Southern Europe")
+```
+
+```{r, fig.pos="H", fig.cap= "Support for differentiated integration in Southern Europe as an interaction between Euroscepticism and exposure to differentiated integration. 95% CIs.", fig.height=8.5}
+pred_plot_southern <- plot_model(southern_mod$`Southern Europe`, type = "pred", terms = c("article_disc_log", "south_dummy"), 
+                                 colors = "bw", legend.title = "Southern Europe")
+pred_plot_southern_final <-  pred_plot_southern + ggtitle("Support for constitutional differentiation (Southern Europe)", subtitle = "Support for differentiation among Southern and non-Southern Europeans") + labs(x = "Differentiation (article-years (logged))",
+                                                                                                                                 y = "Predicted value")
+pred_plot_southern_final + font_size(title = 15, labels.x = 15, labels.y = 15) + scale_linetype_manual(name = "Southern Europe",
+                           values = c("dashed", "solid"),
+                           labels = c("Non-Southern", "Southern"))
+```
+
+```{r }
+scandi_eurosceptic = list()
+scandi_eurosceptic$"Scandinavia (three-way interactions)" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
+                             eurosceptic + gender + excl_identity + nordic_dummy + article_disc_log*eurosceptic*nordic_dummy + (1|country), weights = EUI_final_DI_disc$weight, 
+                           data = EUI_final_DI_disc)
+coef_map_nordic <- c('(Intercept)' = 'Constant',
+                          'article_disc_logeurosceptic1nordic_dummy1' = 'Article-years (logged) X Eurosceptic X Scandinavia',
+                          'article_disc_log' = 'Article-years (logged)',
+                          'nordic_dummy1' = "Scandinavia",
+                          'market_europe' = 'Liberal economic values',
+                          'alternative econ' = 'Perception of economy',
+                          'gov_trust' = 'Support national government',
+                          'left_right' = 'Left-right',
+                          'left_right_sqr' = 'Left-right (sqr)',
+                          'eurosceptic1' = 'Eurosceptic',
+                          'gender' = 'Gender',
+                          'excl_identity' = 'Exclusively national identity')
+modelsummary::modelsummary(scandi_eurosceptic, fmt = 3, output = "latex", coef_map = coef_map_nordic,
+             stars = TRUE, title = "Model showing three-way interaction between Scandinavian dummy, Eurosceptic and article-years (logged)")
+```

@@ -8,7 +8,7 @@ author:
 # bibliography: "`r paste0(Sys.getenv('HOME'),'/Dropbox/master.bib')`" # This would be more general
 bibliography: inst/bib_paper_3.bib
 csl: inst/european-journal-of-political-research.csl
-abstract: "Questions about the public legitimacy of the EU’s increasingly flexible integration are attracting increasing scholarly interest. However, we still know little about whether exposure to past differentiation shapes public preferences for a more differentiated EU, and whether this varies according to how people think about EU membership. Combining recent survey data with data showing country-level exposure to differentiated integration, I show that those who have been exposed to more differentiation are likelier to want a future EU that allows countries to opt out of undesirable policy integration. This effect is particularly strong among Eurosceptics. My results suggest that exposure to the differentiated integration often used to integrate highly salient policy areas can solidify popular support for a less integrated EU, complicating the EU’s move towards an ‘ever closer Union’."
+abstract: "Questions about the public legitimacy of the EU’s flexible integration is emerging as an important question for European public opinion research. However, we still know very little about how attitudes towards the EU's differentiated integration are shaped by exposure to such differentiation in the past, and how this effect relates to individual Euroscepticism. Combining recent survey data with data showing country-level exposure to differentiated integration, I show that those who have been exposed to more differentiation are likelier to want a future EU that allows countries to opt out of undesirable policy integration. This effect is particularly strong among Eurosceptics. However, whether differentiated integration is voluntarily chosen or discriminatorily imposed seems to be less important. Altogether, my results suggest that exposure to the differentiated integration often used to integrate highly salient policy areas can solidify popular support for a less integrated EU. This potentially complicates the EU’s move towards an ‘ever closer Union’."
 keywords: "differentiated integration, public opinion, Euroscepticism, European integration, contestation of the EU"
 geometry: margin=1in
 mainfont: cochineal
@@ -36,12 +36,10 @@ header-includes:
 ```{r setup, include=FALSE}
 is_docx <- knitr::pandoc_to("docx")
 is_latex <- knitr::pandoc_to("latex")
-
 # I don't know how Texas Instruments smart this is, but p-sure default DPI is 96.
 # That's not a problem for LaTeX, but it looks not-so-great for Word.
 # For Word, let's up that to 600. This should allow for cross-referencing 
 # in {bookdown} while allowing for conditional DPI
-
 if (is_latex) {
   conditional_dpi <- 300
   return(conditional_dpi)
@@ -49,8 +47,6 @@ if (is_latex) {
   conditional_dpi <- 600
   return(conditional_dpi)
 } 
-
-
 knitr::opts_chunk$set(echo = FALSE,
                       message=FALSE, warning=FALSE,
                       fig.path='doc/figs/',
@@ -60,8 +56,6 @@ knitr::opts_chunk$set(echo = FALSE,
                       x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
                       if (file.rename(x, x2)) x2 else x
                       })
-
-
 library(dplyr)
 library(magrittr)
 # library(tidyverse)
@@ -69,94 +63,79 @@ library(stevemisc)
 library(modelsummary)
 library(huxtable)
 library(kableExtra)
-
 allrds <- list.files(pattern = ".rds", path = "data") %>%
   stringr::str_remove(., ".rds")
-
 for(i in allrds) {
       filepath <- file.path(paste0("data/",i,".rds"))
       assign(i, readRDS(filepath))
     }
-
 ```
 
 # Introduction
-Despite being among the world’s most advanced political cooperations, the expansion of the EU’s policy remit after the ratification of the Maastricht Treaty has made its integration ever-more differentiated [@leuffen_differentiated_2013; @schimmelfennig_ever_2020]. Internal EU differentiation typically takes two forms: First, some member states have opted out of cooperation to protect their own sovereignty. This is called “constitutional differentiation”. Second, through a process known as “instrumental differentiation”, countries with a diminished capacity for integration have been allowed to integrate at different schedules. This can either happen voluntarily or as a result of EU institutions imposing it as a precondition for membership [@schimmelfennig_instrumental_2014]. The differentiation of current European integration makes ‘variable geography’ [@stubb_categorization_1996] a better description of today’s EU than ‘ever closer Union’.  
+Despite the EU being one of the most advanced political cooperations at the global stage, its integration has become increasingly fragmented after the ratification of the 1992 Maastricht Treaty. The differentiation of EU integration has primarily been driven by a desire to deepen political cooperation despite contestation of it in groups of countries [@leuffen_differentiated_2013; @schimmelfennig_ever_2020]. Differentiation has typically taken two forms: First, some member states have opted out of cooperation to protect their own sovereignty. This is called “constitutional differentiation”. Second, “instrumental differentiation” has happened where countries with a diminished capacity for integration have been allowed to integrate at different schedules. Such differentiation can either happen voluntarily or because the EU's institutions impose differentiation as a precondition for membership [@schimmelfennig_instrumental_2014]. Thus, ‘variable geography’ [@stubb_categorization_1996] is in many ways a better description of the EU's political development than the union's own goal of "ever closer Union".  
 
-While increasing attention is being paid to why people want a differentiated EU [@leuffen_public_2022; @telle_elite_2022], we know little about how exposure to it has impacted support for a differentiated future EU. While one of the few existing contributions examining the effect of differentiation on public opinion shows that it may strengthen the perceptions of the EU’s input legitimacy [@schraff_does_2020], two knowledge gaps remain: We still know too little about how past exposure to differentiation shapes support for it. Second, our understanding of how the relationship between exposure to differentiation and support for it is conditioned by attitudes towards the EU is still incomplete. Whether there is a conditioning effect, either in the broader EU population, or where differentiation has been implemented in either a dominating or voluntary fashion is also unknown.  
+While increasing attention is being paid to what shapes popular preferences for such differentiation [@leuffen_public_2022; @telle_elite_2022], we know little about how actual exposure to it has impacted support for the goal of a uniformly integrated EU. While one of the few existing contributions examining the effect of differentiation on public opinion shows that allowing for differentiation may strengthen the perceived democratic legitimacy of the EU [@schraff_does_2020], important knowledge gaps remain: First, as mentioned, we know too little about how past exposure to differentiation shapes support for it. Second, our understanding of how this relationship is moderated by Eurosceptic sentiments. Lastly, we do not know whether the voluntarily chosen or involuntarily imposed nature of past differentiation impacts citizens' preferences for differentiation as a future model of EU integration.  
 
-By combining survey data on citizens’ attitudes towards constitutional differentiated integration from 2020-2021 with data detailing differentiations from the EU’s treaties, I find that support for constitutional differentiation increases with exposure to differentiations from EU law, and that the extent to which this is the case strongly depends on your past attitudes towards the EU. However, I find that both where differentiation has been voluntary chosen, as in Scandinavia, or externally imposed by the EU's institutions, as in Central and Eastern Europe, support for differentiated integration is higher than in the rest of the EU. While Eurosceptics may be more likely to support differentiated integration if they have been exposed to greater amounts of it because it would make them more likely than others to believe that differentiated integration is a path towards a less integrated Europe, more research is needed to understand why there is no real effect of past histories of differentiation in two regions with very different historical experiences with differentiated integration.
+By combining survey data on citizens’ attitudes towards constitutional differentiated integration from 2020-2021 with data detailing country-level differentiations from the EU’s treaties, I find that support for constitutional differentiation increases with exposure to differentiations from EU law, and that the extent to which this is the case strongly depends on individual-level Euroscepticism. However, there does not seem to be a clear connection between how the differentiated integration citizens have been exposed to in the past have been implemented and support for a less uniformly integrated EU. The greater support for differentiation among Eurosceptics can be explained by how such differentiation is more likely to bring about the less integrated Europe that such individuals may want. However, more research is needed to understand the seeming lack of a diverging response to differentiation even where it has been implemented under very different circumstances.
 
-My findings are important to the discussion about the EU’s future spawned by Brexit [@european_commission_white_2017]: Because EU integration has expanded into increasingly salient areas, differentiation may be called upon to dampen public contestation of it [@schimmelfennig_ever_2020]. By providing greater numbers of citizens with exposure to differentiation, the EU’s institutions may solidify opposition to further integration among the same Eurosceptics that have previously been able to put the brakes on further integration [@hooghe_postfunctionalist_2009]. 
+In addition to expanding our knowledge of public support for differentiated EU integration, this article contributes to a broader literature on public support for international organizations [@dellmuth_legitimacy_2020; @dellmuth_elite_2021; @edwards_public_2009] While the EU’s legal and functional reach is much greater than that of other international organizations, many of the organizations constituting the global governance system have seen their legal and political powers expand in recent years [@zurn_theory_2018]. Even if more research is needed to understand whether my results travel to contexts other than the EU, my results can help illuminate how the allowance of differentiations from an emerging international legal order can shape attitudes towards deepening transnational cooperation. 
 
-Furthermore, the article contributes to the broader emerging literature on public support for international organizations [@dellmuth_legitimacy_2020; @dellmuth_elite_2021; @edwards_public_2009] While the EU’s legal and functional reach is much greater than that of other international organizations, there has been a turn towards expanding both the political and legal powers of many of the organizations constituting the global governance system [@zurn_theory_2018]. Even if more research is needed to understand whether my results travel to contexts other than the EU, my article helps shine a light on how public support for deeper political integration is impacted by non-uniform implementations of this emerging legal order. 
+My findings are also important to the discussion about the EU’s future spawned by Brexit [@european_commission_white_2017]: Because EU integration has expanded into increasingly salient areas, differentiation has often been used to mitigate the challenges caused by public contestation [@schimmelfennig_ever_2020]. By providing greater numbers of citizens with exposure to differentiation, the EU’s institutions may solidify opposition to further integration among greater numbers of citizens, potentially stalling future attempts at cooperation [@hooghe_postfunctionalist_2009]. 
 
 # Public support for European integration - what we know and what we don't
-A large literature investigates individual preferences for European integration [@basile_sharing_2020; @bremer_junckers_2020; @de_vries_variable_2013; @eichenberg_post-maastricht_2007; @gabel_public_1998; @hobolt_public_2015; @hooghe_calculation_2005]. The literature identifies three mechanisms that help shape attitudes towards the EU. The first is utilitarian, with support for the EU contingent on whether individuals or social groups with which they identify stand to gain from integration [@foster_economic_2021; @gabel_public_1998]. The second is cue-based, and posits that citizens use informational shortcuts like elite discourses, media messages, and national benchmarks to form an opinion about European integration  [@harteveld_europe_2013; @marquart_knowing_2019; @steenbergen_whos_2007; @vries_euroscepticism_2018]. The literature also shows that strong identification with the nation-state makes citizens more likely to oppose EU integration [@borzel_identity_2020; @hooghe_calculation_2005; @luedtke_european_2005]. 
+A large literature investigates individual preferences for European integration [@basile_sharing_2020; @bremer_junckers_2020; @de_vries_variable_2013; @eichenberg_post-maastricht_2007; @gabel_public_1998; @hobolt_public_2015; @hooghe_calculation_2005]. The literature identifies three mechanisms that help shape attitudes towards the EU. The first is utilitarian, with support for the EU contingent on whether individuals or the social groups with which they identify stand to gain from integration [@foster_economic_2021; @gabel_public_1998]. The second is cue-based, with citizens relying informational shortcuts like elite discourses, media messages, and national benchmarks to form opinions about European integration [@harteveld_europe_2013; @marquart_knowing_2019; @steenbergen_whos_2007; @vries_euroscepticism_2018]. Lastly, strong identification with the nation-state potentially makes citizens more likely to oppose EU integration [@borzel_identity_2020; @hooghe_calculation_2005; @luedtke_european_2005]. 
 
 An under-investigated issue is why some people support a more differentiated EU, in which the EU institutionally permits the divergence of the EU's legal order. Such differentiated integration is already comprehensively investigated conceptually [@batora_towards_2020; @leuffen_differentiated_2013; @schimmelfennig_instrumental_2014], empirically [@ganzle_differentiated_2019; @malang_political_2020; @ott_between_2017; @schimmelfennig_eastern_2017; @winzen_government_2020] and normatively [@bellamy_republican_2019; @eriksen_contesting_2019; @lord_autonomy_2021; @nicolaidis_new_2004]. The few contributions investigating individual support for differentiated integration has focused on liberal economic values [@leuffen_public_2022], Euroscepticism [de_blok_blessing_2021], territorially exclusive self-identification [@moland_opting_2022] and party cues [@telle_elite_2022]. 
 
-Thus, with one notable exception, contextual factors have not been brought to the fore in studies of public support for differentiated integration. However, national contexts are crucial for explaining attitudes towards both the EU and other international organizations [@dellmuth_elite_2021; @edwards_public_2009; harteveld_europe_2013]. One contextual source of support for differentiated integration may be the exposure that citizens of EU countries have had to it: A country’s number of differentiations from EU law may bring its level of integration in and out of alignment with what a citizen would prefer. If there is a misalignment between the actual and desired levels of integration, citizens may respond by adjusting their stated preference for future differentiated integration [@busemeyer_beyond_2021; @wlezien_public_1995]. However, previous literature has primarily investigated the potential feedback loops between EU policy-making, such as directives and regulations, and public opinion [@bolstad_dynamics_2015; @de_bruycker_democratically_2020]. This paper shifts the focus to how alterations to the EU's structure, in the form of negotiated or imposed exemptions from the EU's treaties, shapes attitudes towards future preferences for the very same structure.
+Thus, with one notable exception, the effect of contextual factors are under-studied. Such national contexts are crucial for explaining attitudes towards both the EU and other international organizations [@dellmuth_elite_2021; @edwards_public_2009; harteveld_europe_2013]. One potential source of support for differentiated integration may be the varying exposure that citizens of EU countries have had to it: A country’s number of differentiations from EU law may bring its level of integration in and out of alignment with what a citizen would prefer. If there is a misalignment between the actual and desired levels of integration, citizens may respond by either expressing greater or lesser support for a more differentiated EU that can bring about a political cooperation more aligned with their preferences [@busemeyer_beyond_2021; @wlezien_public_1995]. Previous literature has primarily investigated the potential feedback loops between EU policy-making, such as directives and regulations, and public opinion [@bolstad_dynamics_2015; @de_bruycker_democratically_2020]. This paper instead focuses on how alterations to the EU's legal structure, in the form of negotiated or imposed exemptions from the EU's treaties, shapes attitudes towards more or less uniform integration.
 
-I believe that greater exposure to differentiated integration will increase support for it as a model of future integration. This is because such exposure is likely to familiarize citizens with EU differentiation, thus increasing their knowledge of how differentiated integration would work in the future. Greater knowledge is often, though not always, associated with greater support for European integration [@marquart_knowing_2019; @verhaegen_does_2015]. I furthermore find it theoretically plausible that whether this is the case will depend on whether one identifies with Eurosceptic sentiments or not: Because constitutional differentiated integration allows for permanent opt-outs from specific policy areas, Eurosceptics are more likely to see differentiated integration as a viable path towards the less differentiated Europe that they want to see in the future. This yields two complementary hypotheses:   
+Greater exposure to differentiated integration is also likely to make citizens more familiar with EU differentiation, thus increasing their knowledge of how differentiated integration would work in the future. Such knowledge of EU policies is often, though not always, associated with greater support for EU integration [@marquart_knowing_2019; @verhaegen_does_2015]. I also find it theoretically plausible that this relationship will depend on whether citizens support their countries' EU memberships or not: Because constitutional differentiated integration allows for permanent opt-outs from specific policy areas, Eurosceptics who favour leaving the EU are more likely to see differentiated integration as a viable path towards the less differentiated Europe that they primarily prefer. This yields two complementary hypotheses:   
 
-*H1a: Exposure to differentiated integration increases support for future differentiated integration.*  
+*H1a: Exposure to differentiated integration increases support for future differentiated integration.*    
 
-```{r h1a, eval=!is_latex, results="asis"}
-cat('> **H1a**: Exposure to differentiated integration increases support for future differentiated integration. ')
-```
+*H1b: Exposure will lead to greater support for differentiation among Eurosceptics than supporters of EU membership.*   
 
-*H1b: The effect of exposure is larger among Eurosceptics than supporters of EU membership.*  
+Responses to differentiated integration may also vary based on whether differentiation was imposed by the EU’s institutions or voluntarily chosen by member state governments. An important reason is that citizens may perceive such differentiation as the EU dominating their countries, by shutting them out of economically beneficial integration. As @schimmelfennig_eu_2014 shows, countries in Central and Eastern Europe were among those exposed to the greatest amount of discriminatory differentiated integration. Among other things, the new Eastern member states were for several years excluded from Schengen, and thus the possibility of easily moving for work purposes. The reason was that existing member states wanted to shield themselves from the economic destabilization believed to follow from the EU accession of countries like Poland, Estonia, and Hungary. As figure A6 shows, citizens of Central and Eastern Europe are among those in this sample exposed to the greatest amount of differentiated integration.
 
-```{r h1b, eval=!is_latex, results="asis"}
-cat('> **H1b**: The effect of exposure is larger among Eurosceptics than supporters of EU membership.')
-```
+Eurosceptics in these countries may also have more adverse reactions to differentiated integration than those supporting EU membership: Because citizens in these countries may predominantly be familiar with externally imposed and discriminatory differentiation, Eurosceptics may be more likely to identify a non-uniformly integrated EU that allows countries to opt out of integration with the potential for domination. Their concern for national sovereignty may again lead them to develop more strongly negative attitudes towards differentiated integration than what can be found among supporters of EU membership.
 
-Responses to differentiated integration may further vary based on whether differentiation was imposed by the EU’s institutions or voluntarily chosen by member state government. An important reason is that citizens may perceive such differentiation as the EU dominating their countries, by shutting them out of economically beneficial integration. As @schimmelfennig_eu_2014 shows, the countries of Central and Eastern Europe were among those exposed to the greatest amount of discriminatory, rather than preferential, differentiated integration. Among other things, the new Eastern member states were for several years excluded from the mobility rights afforded to Schengen citizens. The reason was that existing member states wanted to shield themselves from the economic destabilization believed to follow from the EU accession of countries like Poland, Estonia, and Hungary. As figure A6 shows, citizens of Central and Eastern Europe are among those in this sample exposed to the greatest amount of differentiated integration.
+Elites in Central and Eastern Europe, especially in Poland, have also framed differentiated integration as a path towards a divided EU, with a powerful core and a less powerful periphery [@cianciara_differentiated_2014 178-179]. For example, Polish politicians opposed further integration of the Eurozone, a prominent example of differentiated integration, because they feared that the Central and Eastern member states outside the currency area would lose their influence over the EU's economic policy-making. As elite cues are particularly important for shaping attitudes towards less salient EU questions [@steenbergen_whos_2007], such as differentiated integration [@telle_elite_2022], citizens would be likely to respond to these discourses by expressing less support for differentiated integration. Thus, two different causal mechanisms could produce the same outcome. 
 
-Eurosceptics in these countries may also have a more adverse reaction to differentiated integration than those who support EU membership: As differentiated integration in these countries has been predominantly discriminatory, they may be more likely to identify a non-uniformly integrated EU, in which countries can choose to opt out of integration if they so choose, with the potential for domination. Given the importance this group places on autonomy they are more likely to have adverse reactions to the discriminatory imposition of differentiated integration.
+However, this history might be less relevant if current political elites do not use it to shape preferences towards differentiated. Instead, the increasingly Eurosceptic attitudes expressed by Central and Eastern European politicians [@borzel_identity_2020; @brack_towards_2020; @kriesi_politicization_2016] might form a more potent backdrop against which Central and Eastern European citizens might be expected to make up their minds. Exposure to such cues might, in contrast to what was stated before, make citizens more likely to express an increased demand for differentiated integration. This yields two competing hypotheses:    
 
-Elites in Central and Eastern Europe, especially in Poland, have also framed differentiated integration as a path towards a divided EU, with a powerful core and a less powerful periphery [@cianciara_differentiated_2014 178-179]. For example, Polish politicians opposed further integration of the Eurozone, a prominent example of differentiated integration, because they feared that the Central and Eastern member states outside the currency area would lose their influence over the EU's economic policy-making. Because elite cues are particularly important for shaping attitudes towards less salient issues, such as differentiated integration, [@steenbergen_whos_2007; @telle_elite_2022] citizens could be more likely to respond to these discourses by adjusting their preferences for integration downwards than if they were related to more salient policy outcomes. Thus, two different causal mechanisms could produce the same outcome. 
+*H2a: Exposure to differentiated integration will lead to lower levels of support for future differentiated integration in Central and Eastern Europe than in the rest of the EU.*    
+*H2b: Exposure to differentiated integration in Central and Eastern Europe will lead to lower levels of support for it among Eurosceptics in these countries compared to supporters of EU membership.*    
+*H3: Exposure to differentiated integration in Central and Eastern Europe will lead to higher levels of support for it than in the rest of the EU.*    
 
-However, this history might be less relevant if it not being discursively mobilized by current actors. Instead, the increasingly Eurosceptic elite attitudes in Central and Eastern Europe [@borzel_identity_2020; @brack_towards_2020; @kriesi_politicization_2016] might form a more potent backdrop against which Central and Eastern European citizens might be expected to make up their minds. Exposure to such cues might, in contrast to what was stated before, make citizens more likely to express an increased demand for differentiated integration. This yields two competing hypotheses:    
+If exposure to discriminatory and externally imposed differentiation leads to less support for differentiated integration, especially among Eurosceptics, we are theoretically likely to find the opposite where differentiation has been voluntarily chosen. Scandinavia is an interesting case study of this theoretical assumption: Here differentiation has been chosen by national governments and justified by explicit references to how these differentiations enhanced national autonomy [@adler-nissen_opting_2014; @leruth_operationalizing_2015; @spendzharova_banking_2016]. Previous literature has also found that the renewal of the Danish opt-out from justice and home affairs in 2015 led to stronger trust in EU democracy among Danish Eurosceptics [@schraff_does_2020]. In other words, it is likely that the familiarity that citizens in Scandinavia have with voluntarily chosen differentiation makes could make them more likely to support it as a future model of EU integration.
 
-*H2a: Exposure to differentiated integration will lead to lower levels of support for future differentiated integration in Central and Eastern Europe than in the rest of the EU.*  
+This is also particularly likely to be true for Scandinavian Eurosceptics: Because their countries are both relatively small and highly dependent on European market access, Eurosceptic Scandinavians could be more likely to see differentiation as a viable second-best alternative to the European disintegration they would otherwise favour. It may also be the case that they, because of a generally critical attitude towards EU integration, are more likely to see differentiated integration as a solution that would better facilitate the less integrated Europe they otherwise favour. I hypothesize the following:    
 
-*H2b: Exposure to differentiated integration in Central and Eastern Europe will lead to lower levels of support for it among Eurosceptics in these countries compared to supporters of EU membership.*  
-*H3: Exposure to differentiated integration in Central and Eastern Europe will lead to higher levels of support for it than in the rest of the EU.*  
+*H4a: Exposure to differentiated integration will lead to greater levels of support for it among for citizens of Sweden and Denmark than in the EU as a whole.*    
 
-If exposure to discriminatory and externally imposed differentiation is assumed to lead to less support for differentiated integration, especially among Eurosceptics, the opposite is likely to be the case for countries where differentiation has primarily been voluntarily chosen. Scandinavia offers an interesting case for testing this assumption. Here the mode of implementation has been drastically different from that found in Central and Eastern Europe, as differentiation was both desired by national governments and justified through the autonomy-enhancing aspects of differentiated integration [@adler-nissen_opting_2014; @leruth_operationalizing_2015; @spendzharova_banking_2016]. Because of the previously explained cueing mechanism one might expect this pro-autonomy discourse to produce greater support for differentiated integration in Scandinavia than elsewhere in the EU.
+*H4b: Exposure to differentiated integration will lead to greater support for it among Scandinavian Eurosceptics than supporters of EU membership.*    
 
-Previous literature has found that the renewal of the Danish opt-out from justice and home affairs in 2015 led to stronger trust in EU democracy among Danish Eurosceptics [@schraff_does_2020]. This suggests both that citizens may respond positively to differentiation and that past exposure could make them more favourably inclined to it in the future. This is particularly likely to be true for Scandinavian Eurosceptics: These citizens may, because their countries are both relatively small and highly dependent on European market access, be more likely to see differentiation as a viable second-best alternative to the European disintegration they would otherwise favour. More generally it may also be the case that, because they are sceptical of EU integration, they are more likely to see differentiated integration as a goal in itself as it represents the kind of less integrated Europe that they would be likely to favour. I hypothesize the following:    
-
-*H4a: The positive effect of exposure to differentiated integration will be greater for citizens of Sweden and Denmark than in the EU as a whole.*  
-
-*H4b: The positive effect of exposure to differentiated integration will be greater for Scandinavian Eurosceptics than supporters of EU membership.*  
-
-My paper thus investigates the impact of exposure to differentiation on two levels: I first investigate the general effect of exposure to differentiated integration in the EU as a whole, as well as in Scandinavia and Central and Eastern Europe. I then test whether this relationship is moderated by pre-existing Eurosceptic sentiments. Such a moderating effect is particularly likely to exist in either of the two regions because of the way that voluntary or discriminatory differentiation may be perceived as either an expansion or diminishing of the autonomy that this group is particularly likely to value.
+My paper thus investigates the impact of exposure to differentiation on two levels: I first investigate the general effect of exposure to differentiated integration in the EU as a whole, as well as in Scandinavia and Central and Eastern Europe. I then test whether this relationship is moderated by pre-existing Eurosceptic sentiments. This lets me test both the general effect of exposure to differentiation as well as its interaction with pre-existing attitudes to European integration.
 
 # Data and methods
 ```{r load data}
 EUI_final_DI_disc <- readRDS("data/EUI_final_DI_disc.Rds")
 nordic_data <- readRDS("data/nordic_data.Rds")
-
 ```
 
-I investigate these hypotheses using multilevel linear models and data from Yougov surveys fielded in 2020-21 [@hemerijck_eui-yougov_2021]. The sample includes respondents from Denmark, Finland, France, Germany, Sweden, Greece, Hungary, Italy, Lithuania, the Netherlands, Poland, Romania, and Spain and has an *N* of `r nrow(EUI_final_DI_disc)`. The surveys include two questions about differentiated integration. The first asks whether respondents want an EU where countries may choose to opt out of certain policy integration. This is called constitutional differentiation. The second asks whether the EU should allow countries to integrate at different speeds, while maintaining the goal of uniform integration in the long run. This is an instrumentally differentiated EU. This article focuses on popular support for the former, as its allowance for an EU that is permanently segmented into multiple policy communities represents arguably the sharpest departure from the EU’s normative goal of an “ever closer Union”. 
+I investigate support for differentiated integration using multilevel linear models and data from Yougov surveys fielded in 2020-21 [@hemerijck_eui-yougov_2021]. The sample includes respondents from Denmark, Finland, France, Germany, Sweden, Greece, Hungary, Italy, Lithuania, the Netherlands, Poland, Romania, and Spain and has an *N* of `r nrow(EUI_final_DI_disc)`. The surveys include two questions about differentiated integration. The first asks whether respondents want an EU where countries may choose to opt out of certain policy integration. This is called constitutional differentiation. The second asks whether the EU should allow countries to integrate at different speeds, while maintaining the goal of uniform integration. This is an instrumentally differentiated EU. This article focuses on popular support for constitutional differentiation, as its allowance for an EU that is permanently segmented into multiple policy communities represents arguably the sharpest departure from the EU’s normative goal of an “ever closer Union”. 
 
-I combine these data with a novel dataset [@schimmelfennig_eudiff1_2022] that features all differentiations from the EU treaties between 1952-2020. The data shows each instance of differentiation a country has been exposed to, the number of articles involved, and how long it was enforced. The dataset contains data on differentiations from EU treaties, or primary law, rather than differentiations from the less salient secondary law that constitutes the EU’s main legislative output [@duttle_opting_2017]. I use treaty differentiations because these are typically more publicly salient and subject to greater debate. Citizens are thus more likely to be aware of them than differentiations in secondary law.
+The survey data are combined with a novel dataset [@schimmelfennig_eudiff1_2022] that features all differentiations from the EU treaties between 1952-2019. The data shows each differentiation a country has been exposed to, the number of articles it involved, and how long it was enforced. The data contain information about differentiations from EU treaties, or primary law, rather than differentiations from the less salient secondary law that constitutes the EU’s main legislative output [@duttle_opting_2017]. I believe the greater salience of primary law differentiation in public debates will lead to a greater knowledge of them among EU citizens than what is the case for differentiations from secondary law. They are thus more likely to be important for respondents as they make up their minds about the desirability of differentiated integration.
 
 ## Dependent variable
-My dependent variable measures support for constitutional differentiated integration. The variable uses a five-unit Likert scale and asks respondents whether they support a constitutionally differentiated EU (“Please tell us how far you agree or disagree with the following statement: Member states should be allowed to opt out of specific areas of European integration. This means that a member state can negotiate exceptions ("opt-out") for areas in which it does not wish to
-cooperate. For example, Denmark has opted out of the common currency, and Poland has
-opted out of the EU's Charter of Fundamental Rights.)". The response categories are ordered from 1-5, with 1 being Strongly agree and 5 being strongly disagree. I reverse the variable coding, so that higher values indicate agreement. By not asking about “constitutional differentiated integration”, the question becomes easier to understand. It also frames differentiation as a tool for strengthening autonomy and clarifies that countries can choose to opt out.
+My dependent variable measures support for constitutional differentiated integration. The variable uses a five-unit Likert scale and asks respondents whether they support a constitutionally differentiated EU (“Please tell us how far you agree or disagree with the following statement: Member states should be allowed to opt out of specific areas of European integration. This means that a member state can negotiate exceptions ("opt-out") for areas in which it does not wish to cooperate. For example, Denmark has opted out of the common currency, and Poland has opted out of the EU's Charter of Fundamental Rights.)". The response categories are recoded, so that 1 becomes Strongly disagree and 5 becomes Strongly agree. By not asking about “constitutional differentiated integration”, the question becomes easier to understand. It also frames differentiation as a tool for strengthening autonomy and clarifies that countries can choose to opt out.
 
 ## Variables of key interest
-To operationalize each country’s exposure to EU differentiation I multiply, for each differentiation, the number of articles that a country was exempt from with the number of years the differentiation was in force. This is then weighted based on the length of time that has passed since the differentiation ceased to be enforced, and finally log-transformed.
+To operationalize each country’s exposure to EU differentiation I multiply, for each differentiation, the number of articles that a country was exempt from with the number of years the differentiation was in force. This is then weighted based on the length of time that has passed since the differentiation ceased to be enforced. I lastly log-transform the variable.
 
-Operationalizing exposure to differentiation in this way has three main benefits: First, it captures both the temporal and functional scope of a country’s exposure to differentiation. Second, the weighting scheme means that those instances of differentiation that are still in force are given the most weight when investigating differentiation’s impact on support for differentiated integration in the future. This is likely to correspond to how respondents relate their own experience of differentiation to support for it: While many respondents from Central and Eastern Europe may still remember the particulars of their countries’ exposure to externally imposed differentiation, possibly producing a cohort effect among these individuals [@lauterbach_europe_2020], Southern European respondents are less likely to remember that they were exposed to externally imposed differentiation several decades ago and use this as an informational backdrop for their attitude-formation. Finally, the log-transformation reduces the influence of outliers. 
+This operationalization has three benefits: First, it captures both the temporal and functional scope of a country’s exposure to differentiation. Second, the weighting scheme means that those instances of differentiation that were recently in force are given the most weight when investigating the impact of exposure to differentiated integration. This is also likely to correspond to how respondents relate their own experience of differentiation to support for it: While many respondents from Central and Eastern Europe may still remember the particulars of their countries’ exposure to externally imposed differentiation, possibly producing a cohort effect [@lauterbach_europe_2020], Southern European respondents are less likely to both remember that they were exposed to externally imposed differentiation several decades ago and use this as a backdrop against which they shape their attitudes towards it. Finally, the log-transformation reduces the influence of extreme values, caused by particularly large numbers of differentiations in certain countries.
 
-To analyse the regionally specific effects of differentiation, I create dummies for Scandinavian and Central and Eastern European citizenship. I code all Swedish and Danish citizens with a 1 on the Scandinavian dummy. To create a Central and Eastern European dummy I do the same for everyone from Hungary, Lithuania, Poland, and Romania. These are used to investigate the interaction effects assumed by H2-H4. I also create a dummy for Euroscepticism, coding those who answer that they would vote yes to leaving the European Union in a hypothetical referendum with a 1 and those answering no with a 0.
+To analyse the regionally specific effects of differentiation, I create dummies for Scandinavian and Central and Eastern European citizenship. I code all Swedish and Danish citizens with a 1 on the Scandinavian dummy. To create a Central and Eastern European dummy I do the same for everyone from Hungary, Lithuania, Poland, and Romania. These are used to investigate the interaction effects assumed by *H2-H4*. I also create a dummy for Euroscepticism, coding those who answer that they would vote yes to leaving the European Union in a hypothetical referendum with a 1 and those answering no with a 0.
 
 I operationalize support for liberal economic policies, which has been found by previous literature to be a key determinant of support for differentiated integration [@leuffen_public_2022], through a question that asks whether respondents want to live in a Europe that “stresses economic integration, market competition and fiscal discipline”. This is contrasted to “a global Europe that acts as a leader on climate, human rights and global peace” or “a protective Europe that defends the European way of life and welfare against internal and external threats”. I code those who say that they prefer to live in a primarily market-oriented Europe as 1 and others 0 on this variable. While the question is multi-faceted, by asking about both fiscal discipline that may be described as austerity policies and more general market integration, I believe it still measures a general affinity for economic liberalism.
 
@@ -168,7 +147,6 @@ I also use ideology and gender as socio-political control variables. These are e
 
 ```{r create descriptive data}
 data_descriptives <- readRDS("data/Data_descriptives.Rds")
-
 data_descriptives <- data_descriptives %>%
   rename(`Support constitutional DI` = opt_out_supp) %>%
   rename(`Article-years (logged)` = article_disc_log) %>%
@@ -185,39 +163,31 @@ data_descriptives <- data_descriptives %>%
 
 ```{r}
 library(modelsummary)
-
 table_format <- ifelse(is_docx, "huxtable", 'default')
-
 modelsummary::datasummary_skim(data_descriptives, fmt = 3, histogram = FALSE, 
                  title = "Descriptive statistics", output = "latex")
-
 ```
 
 ## Limitations
-A limitation of the study is that both surveys were fielded during the COVID-19 pandemic, which could impact support for differentiation. However, @cicchi_eu_2020 show that solidarity, as is common, still seemed to reside at the national level in the early phase of the crisis. This means that my results may generalize to periods beyond those in which the survey was fielded. To account for how different baseline levels of support for differentiation are likely to exist in each country, I use multilevel models with random country intercepts.
+A limitation of the study is that both surveys were fielded during the COVID-19 pandemic. This might impact support for differentiation. However, @cicchi_eu_2020 show that solidarity, as is common, still seemed to reside at the national level in the early phase of the crisis. This means that my results may generalize to periods beyond those in which the survey was fielded. To account for the different baseline levels of support that are likely to exist in each country, I use multilevel models with random country constants
 
 There are also large amounts of missingness on certain variables (see table 1). Missing data may bias the results if they are correlated with individual-level characteristics like ideology or gender. I test the effect of such bias by multiply imputing the data [@buuren_mice_2011]. I show the results of this test in the section Robustness checks. 
 
-A further limitation, general to all studies using observational survey data, is the challenge of omitted variable bias. In this study omitted variable bias is particularly likely to stem from the absence of data on the respondents’ knowledge of the EU and education [@karp_know_2003; @marquart_knowing_2019]. I use sensitivity analysis [@cinelli_making_2020] to tentatively quantify the size of this bias and show the results of the analyses in the section Robustness checks. 
+A further limitation, general to all studies using observational survey data, is the challenge of omitted variable bias. Here omitted variable bias is particularly likely to stem from the absence of data on the respondents’ knowledge of the EU and education [@karp_know_2003; @marquart_knowing_2019]. I use sensitivity analysis [@cinelli_making_2020] to tentatively quantify the size of this bias. I show the results of these analyses in the section Robustness checks. 
 
 # Results and discussion
-I first show the effect of exposure to differentiation in the broader population, and especially how this interacts with already pre-existing Euroscepticism. I then discuss the effect of differentiation on support for it in both Scandinavia and Central and Eastern Europe.
+I first show the effect of exposure to differentiation in the broader population, and especially how this interacts with pre-existing Euroscepticism. I then discuss how the effect of exposure is moderated by Scandinavian or Central and Eastern European citizenship.
 
 ```{r analysis 1}
 library(lme4)
 library(merTools)
-
 ```
 
 ```{r }
-
 main_mod = list()
-
 main_mod$"Euroscepticism" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
                                                          eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + (1|country), weights = EUI_final_DI_disc$weight, 
                                                          data = EUI_final_DI_disc)
-
-
 coef_map_eurosceptic <- c('(Intercept)' = 'Constant',
                           'article_disc_logeurosceptic1' = 'Article-years (logged) X Euroscepticism',
                           "article_disc_lognordic_dummy1" = "Article-years (logged) X Scandinavia", 
@@ -233,43 +203,35 @@ coef_map_eurosceptic <- c('(Intercept)' = 'Constant',
                           'eurosceptic1' = 'Eurosceptic',
                           'gender' = 'Gender',
                           'excl_identity' = 'Exclusively national identity')
-
 modelsummary(main_mod, fmt = 3, coef_map = coef_map_eurosceptic, output = "latex", 
              stars = TRUE, title = "Model showing interaction between Euroscepticism and exposure to DI")
 ```
 
-Both table 2 and figure 1 strongly support *H1a* and *H1b*, by confirming that exposure to differentiated integration is associated with greater support for differentiation as a future model for the EU. The effect of exposure is also significantly greater among Eurosceptics. The reason may be that Eurosceptic citizens in countries with greater exposure to differentiated integration are likelier to be familiar with the structure of a differentiated EU membership than those in countries not exposed to any differentiation. They may also see it as a more viable “second-best” alternative to full disintegration. However, even if the effect is larger for Eurosceptic than non-Eurosceptic citizens, the results suggest that future demands for differentiated integration among those most strongly exposed to it are unlikely to be restricted only to Eurosceptics.
+Both table 2 and figure 1 strongly support *H1a* and *H1b*, by confirming that exposure to differentiated integration is associated with greater support for differentiation as a future model for the EU. We also find that exposure leads to greater levels of support for differentiated integration among Eurosceptics. The reason may be that Eurosceptic citizens in countries with greater exposure to differentiated integration are likelier to be familiar with the structure of a differentiated EU membership than those in countries not exposed to any differentiation. They may thus be the ones most likely to see such differentiation as a viable solution for achieving the goal of a less integrated EU. However, even if the effect is larger for Eurosceptic than non-Eurosceptic citizens, the results suggest that future demands for differentiated integration among those most strongly exposed to it are unlikely to be restricted only to Eurosceptics.
 
 ```{r, fig.pos="H", fig.cap="Predicted probability of support for constitutional differentiation as a function of the interaction between article-years (logged) and Euroscepticism. 95% CIs."}
-
 library(sjPlot)
 library(ggplot2)
 pred_plot_eurosceptic <- plot_model(main_mod$`Euroscepticism`, type = "pred", terms = c("article_disc_log", "eurosceptic"), 
                                     colors = "bw", legend.title = "Eurosceptic")
-
 pred_plot_eurosceptic_final <-  pred_plot_eurosceptic + ggtitle("Support for constitutional differentiation", 
                                                                 subtitle = "Support for differentiation among Eurosceptics and non-Eurosceptics") + labs(x = "Differentiation (article-years (logged))",
                                                                                                                      y = "Predicted value") + scale_linetype_manual(name = "Eurosceptic",
                            values = c("dashed", "solid", "dotted"),
                            labels = c("Non-Eurosceptic", "Eurosceptic"))
-
 pred_plot_eurosceptic_final <- pred_plot_eurosceptic_final + font_size(title = 15, labels.x = 15, labels.y = 15)
-
 pred_plot_eurosceptic_final
 ```
 
-A plausible counter-argument to my hypothesized causal mechanism could be that differentiation was primarily chosen where underlying Euroscepticism, and thus a demand for differentiation, was already high. Figure A6 offers some support for such an assumption, as we find high levels of differentiated integration in Sweden and Denmark. These are countries where opt-outs from integration have been deployed as a response to a Euroscepticism shared by both political parties and voters [@leruth_operationalizing_2015; @spendzharova_banking_2016]. However, countries as diverse as Lithuania, Hungary, Italy, and the Netherlands have also seen differentiations from EU treaties. Differentiated integration is thus not a phenomenon restricted to the countries found in what @bolstad_dynamics_2015 identifies as a Eurosceptic periphery. This strengthens the case that the effect is not only driven by an endogenous relationship between Euroscepticism and differentiation.
+A plausible counter-argument to my hypothesized causal mechanism could be that differentiation has primarily been chosen where underlying Euroscepticism, and potentially the demand for differentiation, was already high. Figure A6 offers some support for this assumption, as we find high levels of differentiated integration in Sweden and Denmark. These are countries where opt-outs from integration have been deployed as a response to a Euroscepticism shared by both political parties and voters [@leruth_operationalizing_2015; @spendzharova_banking_2016]. However, citizens of countries as diverse as Lithuania, Hungary, Italy, and the Netherlands have also been exposed to differentiated integration. It is thus not a phenomenon restricted to the countries found in what @bolstad_dynamics_2015 identifies as a Eurosceptic periphery. This strengthens the case that the effect is not only driven by an endogenous relationship between Euroscepticism and differentiation.
 
 I next analyse how support for constitutional differentiation is shaped by whether differentiation is voluntarily chosen or involuntarily imposed. I do this by comparing the interaction effects of Scandinavian and Central and Eastern European citizenship.
 
 ```{r }
-
 main_regional = list()
-
 main_regional$"Regional dummies" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
                                                eurosceptic + gender + excl_identity + nordic_dummy + CEE_dummy + article_disc_log*nordic_dummy + article_disc_log*CEE_dummy +  (1|country), 
                                                weights = EUI_final_DI_disc$weight, data = EUI_final_DI_disc)
-
 library(modelsummary)
 library(dplyr)
 coef_map_regions <- c('(Intercept)' = 'Constant',
@@ -285,13 +247,12 @@ coef_map_regions <- c('(Intercept)' = 'Constant',
                           'gender' = 'Gender',
                           'excl_identity' = 'Exclusively national identity', 
                       "article_disc_logeurosceptic1" = "Article-years (logged) X Eurosceptic")
-
 modelsummary(main_regional, fmt = 3, output = "latex", coef_map = coef_map_regions, 
              stars = TRUE, title = "Model showing regional interactions")
   
 ```
 
-Table 3 shows a positive and statistically significant effect of the interaction between exposure to differentiated integration and Scandinavian citizenship. However, it finds no statistically significant effect of the interaction between Central and Eastern European citizenship and exposure to differentiated integration.
+Table 3 shows that the effect of the interaction between exposure to differentiated integration and Scandinavian citizenship is positive and statistically significant. However, the interaction effect between exposure to differentiated integration and Central and Eastern European citizenship is statistically insignificant.
 
 ```{r, create plot}
 library(sjPlot)
@@ -299,40 +260,33 @@ library(ggplot2)
 #Scandinavia
 pred_plot_nordics <- plot_model(main_regional$`Regional dummies`, type = "pred", terms = c("article_disc_log", "nordic_dummy"), 
                                 legend.title = "Scandinavia", colors = "bw")
-
 pred_plot_nordics_final <-  pred_plot_nordics + ggtitle("Scandinavia") + labs(x = "Differentiation (article-years (logged)",
                                                                                                                            y = "Predicted value")
 pred_plot_nordics_final <- pred_plot_nordics_final + font_size(title = 15, labels.x = 15, labels.y = 15) + scale_linetype_manual(name = "Scandinavia",
                            values = c("dashed", "solid"),
                            labels = c("Non-Scandinavian", "Scandinavian"))
-
 ##CEE
 pred_plot_CEE <- plot_model(main_regional$`Regional dummies`, type = "pred", terms = c("article_disc_log", "CEE_dummy"), 
                                     colors = "bw", legend.title = "CEE")
-
 pred_plot_CEE_final <-  pred_plot_CEE + ggtitle("Central and Eastern Europe") + labs(x = "Differentiation (article-years (logged))",
                                                                                                                      y = "Predicted value") + scale_linetype_manual(name = "CEE",
                            values = c("dashed", "solid"),
                            labels = c("Non-CEE", "CEE"))
-
 pred_plot_CEE_final <- pred_plot_CEE_final + font_size(title = 15, labels.x = 15, labels.y = 15)
 ```
 
 ```{r, fig.pos="H", fig.cap="Variations in support for differentiation as a function of exposure to DI (A = Scandinavia and B = CEE)", fig.height=8.5}
 library(patchwork)
-
 regional_final <- pred_plot_nordics_final/pred_plot_CEE_final + plot_annotation(tag_levels = "A", title = "Support for constitutional differentiation", subtitle = "Predicted values for regional interactions of exposure to differentiation in Scandinavia and Central and Eastern Europe", theme = theme(plot.title = element_text(size = 16))) 
-
 regional_final
 ```
 
-Figure 2 supports this picture: Scandinavian citizens appear to become more favourably inclined towards differentiated integration as their exposure to it increases, compared to those from other regions. However, this effect is mainly present at the lower end of exposure to differentiation. Thus,I am able to confirm *H4a*, as distinct differences do exist within certain ranges of the variable. However, because of the large overlap for the largest range of the exposure variable this statistical significance must not be taken as indicative of a substantively large interaction effect. 
+Figure 2 supports this picture: Scandinavian citizens appear to become more favourably inclined towards differentiated integration as their exposure to it increases compared to those from other regions. However, this effect is only present for a certain range of the measure of exposure. Thus, I can confirm *H4a*. However, for a large range of the exposure variable the difference between Scandinavian and non-Scandinavian citizens is statistically indistinguishable from zero. 
 
-Similarly, the predicted values show no significant difference between support for differentiation in Central and Eastern Europe and the rest of the EU. This leads me to reject *H2a*. I do, however, find some support for *H3*, whose underlying assumption is that exposure to Eurosceptic cues can lead to stronger support for differentiation even if it was imposed in a discriminatory fashion. 
+However, the predicted values show no significant difference between support for differentiation in Central and Eastern Europe and the rest of the EU. This leads me to reject *H2a*. Neither do I find support for *H3*, as there is no statistically significant greater positive effect of exposure in Central and Eastern Europe. 
 
 ```{r}
 region_mod <- readRDS("data/region_mod.Rds")
-
 modelsummary::modelsummary(region_mod, fmt = 3, output = "latex", coef_map = coef_map_eurosceptic, 
              stars = TRUE, title = "Models showing interactions of Euroscepticism and region")
 ```
@@ -343,18 +297,15 @@ library(ggplot2)
 #Scandinavia
 pred_plot_nordics_eurosceptic <- plot_model(region_mod$Scandinavia, type = "pred", terms = c("article_disc_log", "eurosceptic"), 
                                 legend.title = "Eurosceptic", colors = "bw")
-
 pred_plot_nordics_eurosceptic_final <-  pred_plot_nordics_eurosceptic + ggtitle("Scandinavia") + labs(x = "Differentiation (article-years (logged))",
                                                                                                                            y = "Predicted value")
 pred_plot_nordics_eurosceptic <- pred_plot_nordics_eurosceptic_final +
 scale_linetype_manual(name = "Eurosceptic",
                            values = c("dashed", "solid"),
                            labels = c("Non-Eurosceptic", "Eurosceptic"))
-
 ##CEE
 pred_plot_CEE_eurosceptic <- plot_model(region_mod$CEE, type = "pred", terms = c("article_disc_log", "eurosceptic"), 
                                 legend.title = "Eurosceptic", colors = "bw")
-
 pred_plot_CEE_eurosceptic_final <-  pred_plot_CEE_eurosceptic + ggtitle("Central and Eastern Europe") + labs(x = "Differentiation (article-years (logged))",
                                                                                                                            y = "Predicted value")
 pred_plot_CEE_eurosceptic_final <- pred_plot_CEE_eurosceptic_final +  scale_linetype_manual(name = "Eurosceptic",
@@ -364,260 +315,32 @@ pred_plot_CEE_eurosceptic_final <- pred_plot_CEE_eurosceptic_final +  scale_line
 
 ```{r, fig.pos="H", fig.cap="Interaction between Euroscepticism and region. 95% CIs", fig.height=8.5}
 library(patchwork)
-
 regional_euroscepticism_final <- pred_plot_nordics_eurosceptic/pred_plot_CEE_eurosceptic_final + plot_annotation(tag_levels = "A", title = "Support for constitutional differentiation", subtitle = "Interaction of Euroscepticism and exposure to differentiation in CEE and Scandinavia", theme = theme(plot.title = element_text(size = 16)))
-
 regional_euroscepticism_final
 ```
 
-I must also reject *H2b*, as the effect of the interaction between differentiated integration and Euroscepticism is statistically insignificant in the Central and Eastern Europe data. I furthermore reject *H4b*, as there is no statistically significant difference between the effect of exposure for Eurosceptics and supporters of EU membership in Scandinavia. The lack of a lower level of support for differentiated integration among Central and Eastern Europeans, despite the fact that the discriminatory imposition of differentiation has been especially prevalent in these countries, suggests that historical trajectories and past experience with integration may predominantly lead to altered support for differentiation when it is used as a part of elite discourse. This finding is important for our understanding of how attitudes towards greater differentiation can be shaped by political elites in the future. 
+I also reject *H2b*, as the effect of the interaction between differentiated integration and Euroscepticism is statistically insignificant in the Central and Eastern Europe data. Lastly, I reject *H4b*, as there is no statistically significant difference between the effect of exposure for Eurosceptics and supporters of EU membership in Scandinavia. The lack of a lower level of support for differentiated integration among Central and Eastern Europeans, even if the discriminatory imposition of differentiation has been prevalent in these countries, suggests that historical experience with differentiated integration may shape support for it mainly when it is used as a part of elite discourse. This finding is important for our understanding of how attitudes towards greater differentiation can be shaped by political elites in the future. 
 
-The fact that the surveys were fielded at the height of the COVID-19 pandemic means that we may be seeing lower levels of support for differentiated integration than we otherwise would: As @genschel_postfunctionalism_2021 argue, the COVID-19 pandemic “debordered” solidarity, making the prospect of mutual aid across member state borders more attractive to EU citizens. In times where EU solidarity is framed as a net positive for its citizens, support for differentiation may be lower than it otherwise would have been. More research is thus needed to establish whether the patterns established by this paper are consistent also in the future.
+The fact that the surveys were fielded at the height of the COVID-19 pandemic means that we may be seeing lower levels of support for differentiated integration than we otherwise would: As @genschel_postfunctionalism_2021 argue, the COVID-19 pandemic “debordered” solidarity, making the prospect of mutual aid across member state borders more attractive to EU citizens. In times where EU solidarity is framed as a net positive for its citizens, support for differentiation may be lower than it otherwise would have been. More research is thus needed to establish whether the patterns established by this paper hold also in the future.
 
 # Robustness checks
-I use an approach outlined in @cinelli_making_2020 to test the sensitivity of several of my models to omitted variable bias (see figures A1-4). This quantifies the remaining variance that a potential confounder would need to account for to nullify the effect of theoretical interest, exposure to differentiated integration. A test of the sensitivity of the interaction between Euroscepticism and exposure to differentiation in Scandinavia (figure A3) shows that a variable explaining 50% of the remaining variance of support for constitutional differentiation would need to explain less than 10% of the remaining variance in real exposure to differentiation to nullify the effect of exposure. One potentially important omitted variable is knowledge of the EU [@leuffen_public_2022]. While knowledge of the EU is unlikely to be strongly connected with actual levels of differentiation, its strong connection to support for differentiation makes its omission particularly problematic. This suggests that omitted variable bias is likely to be an analytical concern throughout the entire study. Future studies should mitigate these concerns by including knowledge questions about current EU politics, to allow researchers to include similar controls as those commonly found in other EU public opinion research. 
+I use an approach outlined in @cinelli_making_2020 to test the sensitivity of several of my models to omitted variable bias (see figures A1-4). This quantifies the variance that a potential confounder would need to account for to nullify the effect of exposure to differentiated integration. A test of the sensitivity of the interaction between Euroscepticism and exposure to differentiation in Scandinavia (figure A3) shows that a variable explaining 50% of the remaining variance of support for constitutional differentiation would need to explain less than 10% of the remaining variance in real exposure to differentiation to nullify its effect. One important omitted variable is knowledge of the EU [@leuffen_public_2022]. While knowledge of the EU is unlikely to be strongly connected with actual levels of differentiation, its strong connection to support for differentiation makes its omission particularly problematic. Omitted variable bias is thus likely to be an analytical concern throughout the entire study. Future studies must mitigate these concerns by including knowledge questions about current EU politics, to allow researchers to include a control similar to that found in other EU public opinion research. 
 
-I also use multiple imputation through chained equations [@buuren_mice_2011; @fjelstul_explaining_2022] to test how sensitive the results are to bias caused by underlying patterns of data missingness. Multiple imputation uses each unit’s observed data to derive probable values for all covariates where a unit has missing data. This procedure is iterated many times, before the estimates derived from analysis of each imputed dataset are pooled. This procedure better accounts for the inherent uncertainty associated with data imputation and will thus yield more realistic parameter estimates and standard errors than traditional mean or zero imputation. As appendix tables A2-3 show, the multiply imputed models are similar to those found in tables 2-3. One important exception is the effect of exposure to differentiated integration in Central and Eastern Europe: While there is a weak positive effect of exposure in the main model, the multiply imputed model shows a weakly negative effect. However, both are statistically insignificant. Despite this minor deviation, the tests suggest that the effects established in this paper are not primarily driven by systematic data missingness.
+I also use multiple imputation through chained equations [@buuren_mice_2011; @fjelstul_explaining_2022] to test how sensitive the results are to bias caused by potentially systematic data missingness. Multiple imputation better accounts for the uncertainty associated with data imputation than traditional mean or zero imputation methods, and provides more realistic standard errors. This is particularly beneficial when testing the statistical significance of multiply imputed estimates. As appendix tables A2-3 show, the multiply imputed models are substantively similar to those found in tables 2-4. This suggests that the effect sizes or directions are not driven by systematic data missingness.
 
-I also test whether the substantial overlap between Scandinavian Eurosceptics and non-Eurosceptics is driven by the very low variability, with a standard deviation of `r round(sd(nordic_data$article_disc_log), digits = 2)`,  in the measure of exposure to differentiated integration in the Scandinavian data. I do this by testing a three-way interaction between Scandinavian citizenship, exposure to differentiated integration and Euroscepticism in the full data. Appendix table A6 suggests that the results are substantially similar to the interaction effect of Scandinavian citizenship and Euroscepticism shown in table. The results thus suggest that the estimates are not unduly biased by the very small standard deviation .
+I also test whether the substantial overlap between Scandinavian Eurosceptics and non-Eurosceptics is driven by the very low variability, with a standard deviation of `r round(sd(nordic_data$article_disc_log), digits = 2)`,  in the measure of exposure to differentiated integration found in data from this region. I do this by testing a three-way interaction between Scandinavian citizenship, exposure to differentiated integration and Euroscepticism in the full data. Appendix table A6 suggests that the results are substantially similar to the interaction effect of Scandinavian citizenship and Euroscepticism shown in table 4. The results thus suggest that the estimates are not unduly biased by the very small standard deviation found in this particular region.
 
-Lastly, I test how robust the results are to an alternative operationalization of Euroscepticism: satisfaction with EU democracy. Dissatisfaction with the state of EU democracy may be seen as a form of "regime scepticism", characterized by a dissatisfaction with EU decision-making, than "exit scepticism", as expressed through a desire to leave the union altogether [@vries_euroscepticism_2018]. Figure A5 ( coefficients in table A4) shows similar trends for both operationalizations: Those least satisfied with EU democracy, and who thus express the greatest amount of regime scepticism, also express the greatest support for constitutional differentiated integration. Their support for differentiation also increases more strongly as a function of exposure to previous differentiation than what is the case for those more satisfied with EU democracy. This strengthens the robustness of my original conclusions.
+Lastly, I test how robust the results are to an alternative operationalization of Euroscepticism: satisfaction with EU democracy. Dissatisfaction with the state of EU democracy may be seen as a form of "regime scepticism", characterized by a dissatisfaction with EU decision-making, rather than the "exit scepticism" expressed by a desire to leave the union altogether [@vries_euroscepticism_2018]. Figure A5 (coefficients in table A4) shows similar trends for both operationalizations: Those least satisfied with EU democracy, and who thus express the greatest amount of regime scepticism, also express greater support for constitutional differentiated integration than those more satisfied with EU democracy. Their support for differentiation also increases more strongly as a function of exposure to previous differentiation than what is the case for those more satisfied with EU democracy. This strengthens the robustness of my original conclusions.
 
 # Concluding discussion
 
-This paper establishes, through a combination of data surveying citizen preferences for differentiated integration and their countries’ actual exposure to differentiation from the EU treaties, that there is a strong association between support for differentiated integration and past exposure to it. This may be because citizens more accustomed to differentiated integration potentially perceive it as a favourable way of combining the benefits of national membership of the EU with greater national autonomy. Importantly, I show that a potential tendency to see the kind of exposure that one has been exposed to as a preferable model for the future EU is, broadly speaking, conditioned by whether one opposes or supports EU membership. However, the results do not suggest that the mode of implementation of the differentiation that the same citizens have been exposed to play any large role in shaping attitudes towards a future differentiated EU. 
+This paper establishes, by combining data surveying citizen preferences for differentiated integration with data on their countries’ actual exposure to differentiated integration, that there is a strong association between support for differentiated integration and past exposure to it. This may be because citizens more accustomed to differentiated integration may see it as a favourable way of combining the benefits of national membership of the EU with greater national autonomy. Importantly, this effect appears moderated by whether one opposes or supports EU membership. However, the results do not suggest that the mode of implementation of the differentiation that the same citizens have been exposed to play any large role in shaping attitudes towards a future differentiated EU. 
 
-What this suggests is that even if some differentiated integration could be perceived as a cartelization of the benefits of integration and as a dominating imposition on the political freedom of a polity, this does not necessarily translate to less support for differentiated integration as a policy. While my article does not establish why this is the case, it does strongly suggest that there is only a limited learning effect from exposure to differentiated integration. This is important because it implies that even the dominating imposition of a particular set of policies may not be enough to appreciably alter attitudes towards the same policy even among those who may be most likely to be critical of EU integration. Understanding what kind of discourses are more likely to produce critical attitudes towards differentiated integration in this group is an important question for future research. 
+What this suggests is that even if some differentiated integration could be perceived as a cartelization of the benefits of integration that also constrains the political autonomy of those subject to it, this does not necessarily translate to less support for differentiated integration as a policy. While my article does not establish why this is the case, it does strongly suggest that the positive or negative effect of historical exposure to differentiated integration on support for it in the future depends on whether political elites mobilize this discourse as a part of their efforts to shape attitudes towards the question. Understanding what kind of discourses are more likely to produce critical attitudes towards differentiated integration is thus an important question for future research. 
 
-Another question is whether the public is equally likely to prefer differentiation in all policy areas. Existing research [@de_blok_blessing_2021] has largely focused on individual support for differentiated integration of the EU as a polity. It is both possible and probable that even those favouring an “ever closer Union” may have diverging preferences for integration at the level of individual policies. Testing where individual citizens may prefer more differentiation may also help theorize the ambivalent attitudes towards EU integration found by an increasingly prevalent strand of the EU public opinion literature [@de_vries_variable_2013; @goldberg_one_2021; @moland_constraining_2022].
+Another question is whether the public is equally likely to prefer differentiation in all policy areas. Existing research [@de_blok_blessing_2021; @telle_elite_2022; @leuffen_public_2022] has largely focused on individual support for differentiated integration of the EU as a polity. It is both possible and probable that even those favouring an “ever closer Union” may have diverging preferences for integration at the level of individual policies. Testing where individual citizens may prefer more differentiation may also help theorize the ambivalent attitudes towards EU integration found in previous EU public opinion literature [@de_vries_variable_2013; @goldberg_one_2021; @moland_constraining_2022].
 
-My results have policy implications for both the EU and other international organizations seeking to deepen their own political integration. They suggest first that allowing for a greater institutionalization of differentiated integration may undermine the public legitimacy of the EU’s goal of ‘ever closer Union’. However, beyond the EU, the results also suggest that the public legitimacy of deeper political integration may be challenged if citizens gradually become accustomed to more differentiated and non-uniform forms of integration. While one should be wary of generalizing findings from the EU to other international organizations, my results suggest that allowing some countries to opt out of the legal order that is increasingly developing beyond the EU [@zurn_theory_2018] may lead to greater popular opposition to the idea that countries should be members of entire frameworks of political cooperation, rather than more functionally limited partnerships for solving particular problems. 
+My results have policy implications for both the EU and other international organizations seeking to deepen their own political integration. They suggest first that allowing for a greater institutionalization of differentiated integration may undermine the public legitimacy of the EU’s goal of ‘ever closer Union’. However, beyond the EU, the results also suggest that the public legitimacy of deeper political integration may be challenged if citizens gradually become accustomed to more differentiated and non-uniform forms of integration. While one should be wary of generalizing findings from the EU to other international organizations, my results suggest that allowing some countries to opt out of the legal order that is increasingly developing also beyond the EU [@zurn_theory_2018] may lead to greater popular opposition to the idea that countries should be members of entire frameworks of political cooperation, rather than more functionally limited partnerships dedicated to solving particular problems. 
 
 # References
 <div id="refs"></div>
-
-# Appendix
-\setcounter{table}{0}
-\renewcommand*{\thetable}{A\arabic{table}}
-```{r, results='asis'}
-
-appendix_items <- readRDS("data/appendix_items.Rds")
-library(psychTools)
-
-cat(fa2latex(appendix_items$`Factor analysis of economy`, heading = "Factor analysis of perception of economy", silent = TRUE, caption = "Factor analysis of perceptions of the economy."))
-```
-\setcounter{figure}{0}
-\renewcommand*{\thefigure}{A\arabic{figure}}
-```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged)", fig.height=8.5}
-library(sensemakr)
-appendix_items$"Fixed effect of non-interacted model" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
-                          eurosceptic + gender + excl_identity + factor(country), weights = EUI_final_DI_disc$weight, 
-                        data = EUI_final_DI_disc)
-
-#Run sensemakr
-appendix_items$"Sensitivity test of non-interacted model" <- sensemakr::sensemakr(appendix_items$`Fixed effect of non-interacted model`, 
-                                treatment = "article_disc_log")
-
-plot(appendix_items$"Sensitivity test of non-interacted model", type = "extreme")
-
-```
-
-```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism", fig.height=8.5}
-
-appendix_items$"Fixed effect of interacted model" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
-                        eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = EUI_final_DI_disc$weight, 
-                      data = EUI_final_DI_disc)
-
-appendix_items$"Sensitivity test of interacted model" <- sensemakr(appendix_items$`Fixed effect of interacted model`, 
-                                  treatment = "article_disc_log:eurosceptic1")
-
-plot(appendix_items$`Sensitivity test of interacted model`, type = "extreme")
-
-```
-
-```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism in Scandinavia", fig.height=8.5}
-nordic_data <- readRDS("data/nordic_data.Rds")
-CEE_data <- readRDS("data/CEE_data.Rds")
-
-
-appendix_items$"Fixed effect of interacted model (Nordics)" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
-                                                          eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = nordic_data$weight, 
-                                                        data = nordic_data)
-
-appendix_items$"Sensitivity test of interacted model (Nordics)" <- sensemakr(appendix_items$`Fixed effect of interacted model (Nordics)`, 
-                                                                   treatment = "article_disc_log:eurosceptic1")
-
-plot(appendix_items$`Sensitivity test of interacted model (Nordics)`, type = "extreme")
-```
-
-```{r, fig.cap="Sensitivity to omitted variable bias for article-years (logged) X Euroscepticism in Central and Eastern Europe", fig.height=8.5}
-library(sensemakr)
-appendix_items$"Fixed effect of interacted model (CEE)" <- lm(opt_out_supp ~ article_disc_log + alternative_econ + gov_trust + left_right + left_right_sqr +
-                                                                    eurosceptic + gender + excl_identity + article_disc_log*eurosceptic + factor(country), weights = CEE_data$weight, 
-                                                                  data = CEE_data)
-
-appendix_items$"Sensitivity test of interacted model (CEE)" <- sensemakr(appendix_items$`Fixed effect of interacted model (CEE)`, 
-                                                                             treatment = "article_disc_log:eurosceptic1")
-
-plot(appendix_items$`Sensitivity test of interacted model (CEE)`, type = "extreme")
-
-```
-
-```{r}
-
-library(mice)
-library(miceadds)
-library(merTools)
-main_impute <- readRDS("data/main_impute.Rds")
-```
-
-```{r}
-coef_map_regions2 <- c('(Intercept)' = 'Constant',
-                          'article_disc_log:nordic_dummy' = 'Article-years (logged) X Scandinavia',
-                      'article_disc_log:CEE_dummy' = 'Article-years (logged) X CEE',
-                      "article_disc_log:eurosceptic1" = "Article-years (logged) X Eurosceptic",
-                          'article_disc_log' = 'Article-years (logged)',
-                          'market_europe' = 'Liberal economic values',
-                          'alternative econ' = 'Perception of economy',
-                          'gov_trust' = 'Support national government',
-                          'left_right' = 'Left-right',
-                          'left_right_sqr' = 'Left-right (sqr)',
-                          'eurosceptic1' = 'Eurosceptic',
-                          'gender' = 'Gender',
-                          'excl_identity' = 'Exclusively national identity', 
-                      "nordic_dummy" = "Scandinavia",
-                      "CEE_dummy" = "Central and Eastern Europe")
-
-
-modelsummary(main_impute, fmt = 3, output = "latex", coef_map = coef_map_regions2, 
-             stars = TRUE, title = "Imputed model of interaction between Euroscepticism and article-years (logged) and model with regional dummies")
-```
-
-```{r}
-regional_impute <- readRDS("data/regional_impute.Rds")
-
-coef_map_eurosceptic2 <- c('(Intercept)' = 'Constant',
-                          'article_disc_log:eurosceptic1' = 'Article-years (logged) X Euroscepticism',
-                          'article_disc_log' = 'Article-years (logged)',
-                          'market_europe' = 'Liberal economic values',
-                          'alternative econ' = 'Perception of economy',
-                          'gov_trust' = 'Support national government',
-                          'left_right' = 'Left-right',
-                          'left_right_sqr' = 'Left-right (sqr)',
-                          'eurosceptic1' = 'Eurosceptic',
-                          'gender' = 'Gender',
-                          'excl_identity' = 'Exclusively national identity')
-
-
-modelsummary::modelsummary(regional_impute, fmt = 3, output = "latex", coef_map = coef_map_eurosceptic2, 
-             stars = TRUE, title = "Imputed models showing interactions of Euroscepticism and article-years (logged) by region")
-```
-
-```{r}
-
-coef_map_alteurosceptic <- c('(Intercept)' = 'Constant',
-                          'article_disc_logeu_democ_satisf' = 'Article-years (logged) X Euroscepticism',
-                          'article_disc_log' = 'Article-years (logged)',
-                          'market_europe' = 'Liberal economic values',
-                          'alternative econ' = 'Perception of economy',
-                          'gov_trust' = 'Support national government',
-                          'left_right' = 'Left-right',
-                          'left_right_sqr' = 'Left-right (sqr)',
-                          'eu_democ_satisf' = 'Eurosceptic',
-                          'gender' = 'Gender',
-                          'excl_identity' = 'Exclusively national identity')
-
-modelsummary::modelsummary(appendix_items$`Alternative conceptualization of Euroscepticism`, fmt = 3, output = "latex", coef_map = coef_map_alteurosceptic, 
-             stars = TRUE, title = "Model showing alternative conceptualization of Euroscepticism")
-```
-
-```{r, fig.cap="Predicted values of support for constitutional differentiated integration as a function of an interaction between exposure to differentiated integration and satisfaction with EU democracy. Slopes for minimum, median and maximum values of satisfaction with EU democracy are shown. 95% CIs", fig.height=8.5}
-
-pred_plot_interact_main <- plot_model(appendix_items$`Alternative conceptualization of Euroscepticism`, type = "pred", terms = c("article_disc_log", "eu_democ_satisf"), 
-                                      colors = "bw", legend.title = "EU democracy satisfaction")
-
-pred_plot_interact_main_final <-  pred_plot_interact_main + ggtitle("Support for constitutional differentiation", 
-                                                                    subtitle = "Interaction between EU democracy satisfaction and differentiation") + labs(x = "Differentiation (article-years (logged))",
-                                                                                                                                                           y = "Predicted value") + scale_linetype_manual(name = "EU democracy satisfaction",
-                           values = c("dashed", "solid", "dotted"),
-                           labels = c("Minimum", "Median", "Max")) + font_size(title = 15, labels.x = 15, labels.y = 15)
-
-pred_plot_interact_main_final
-```
-
-```{r, fig.cap="Number of differentiations from EU primary law 1952-2020 (log-transformed and recency-weighted article-years) by EU member state.", fig.height=8.5}
-bar_chart_articleyear <- ggplot(EUI_final_DI_disc, aes(x = factor(country), y = article_disc_log)) +
-  geom_col(stat = "identity", position = "dodge")
-
-bar_chart_articleyear + labs(x = "Country", y = "Discounted article-years (log-transformed)") +
-  scale_x_discrete(breaks = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14),
-                   labels = c("UK", "DK", "FI", "FR", "DE", "SE", "GR", "HU", "IT",
-                              "LT", "NL", "PL", "RO", "ES")) +
-  ggtitle(label = "Differentiated integration in the EU", 
-          subtitle = "Primary law differentiations (article-years log-transformed and weighted)") + font_size(title = 15, labels.x = 15, labels.y = 15)
-```
-
-```{r}
-southern_mod = list()
-
-southern_mod$"Southern Europe" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
-                           eurosceptic + gender + excl_identity + south_dummy + south_dummy*article_disc_log + (1|country), weights = EUI_final_DI_disc$weight, 
-                         data = EUI_final_DI_disc)
-
-
-coef_map_southern <- c('(Intercept)' = 'Constant',
-                          'article_disc_logsouthern_dummy1' = 'Article-years (logged) X Southern Europe',
-                          'article_disc_log' = 'Article-years (logged)',
-                          'market_europe' = 'Liberal economic values',
-                          'alternative econ' = 'Perception of economy',
-                          'gov_trust' = 'Support national government',
-                          'left_right' = 'Left-right',
-                          'left_right_sqr' = 'Left-right (sqr)',
-                          'eurosceptic1' = 'Eurosceptic',
-                          'gender' = 'Gender',
-                          'excl_identity' = 'Exclusively national identity', 
-                      "south_dummy1" = "Southern Europe")
-
-modelsummary::modelsummary(southern_mod, fmt = 3, output = "latex", coef_map = coef_map_alteurosceptic, 
-             stars = TRUE, title = "Model showing effect of exposure in Southern Europe")
-
-```
-
-```{r, fig.pos="H", fig.cap= "Support for differentiated integration in Southern Europe as an interaction between Euroscepticism and exposure to differentiated integration. 95% CIs.", fig.height=8.5}
-
-pred_plot_southern <- plot_model(southern_mod$`Southern Europe`, type = "pred", terms = c("article_disc_log", "south_dummy"), 
-                                 colors = "bw", legend.title = "Southern Europe")
-
-pred_plot_southern_final <-  pred_plot_southern + ggtitle("Support for constitutional differentiation (Southern Europe)", subtitle = "Support for differentiation among Southern and non-Southern Europeans") + labs(x = "Differentiation (article-years (logged))",
-                                                                                                                                 y = "Predicted value")
-pred_plot_southern_final + font_size(title = 15, labels.x = 15, labels.y = 15) + scale_linetype_manual(name = "Southern Europe",
-                           values = c("dashed", "solid"),
-                           labels = c("Non-Southern", "Southern"))
-```
-
-```{r }
-scandi_eurosceptic = list()
-
-scandi_eurosceptic$"Scandinavia (three-way interactions)" <- lmer(opt_out_supp ~ article_disc_log + market_europe + alternative_econ + gov_trust + left_right + left_right_sqr +
-                             eurosceptic + gender + excl_identity + nordic_dummy + article_disc_log*eurosceptic*nordic_dummy + (1|country), weights = EUI_final_DI_disc$weight, 
-                           data = EUI_final_DI_disc)
-
-coef_map_nordic <- c('(Intercept)' = 'Constant',
-                          'article_disc_logeurosceptic1nordic_dummy1' = 'Article-years (logged) X Eurosceptic X Scandinavia',
-                          'article_disc_log' = 'Article-years (logged)',
-                          'nordic_dummy1' = "Scandinavia",
-                          'market_europe' = 'Liberal economic values',
-                          'alternative econ' = 'Perception of economy',
-                          'gov_trust' = 'Support national government',
-                          'left_right' = 'Left-right',
-                          'left_right_sqr' = 'Left-right (sqr)',
-                          'eurosceptic1' = 'Eurosceptic',
-                          'gender' = 'Gender',
-                          'excl_identity' = 'Exclusively national identity')
-
-modelsummary::modelsummary(scandi_eurosceptic, fmt = 3, output = "latex", coef_map = coef_map_nordic,
-             stars = TRUE, title = "Model showing three-way interaction between Scandinavian dummy, Eurosceptic and article-years (logged)")
-```
-
-
-
